@@ -166,6 +166,7 @@ def project(name, region=None):
     if project.regional:
         regions = Feature.select(
             Feature.region, fn.Count(),
+            # fn.Sum(Case(None, [(Feature.validates_count >= 1, 1)], 0))).where(
             fn.Sum(fn.Min(Feature.validates_count, 1))).where(
                 Feature.project == project).group_by(
                 Feature.region).order_by(Feature.region).tuples()
